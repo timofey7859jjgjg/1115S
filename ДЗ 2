@@ -1,0 +1,122 @@
+import random
+
+class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        self.energy = 100
+        self.hunger = 0
+        self.mood = 100
+        self.health = 100
+        self.cleanliness = 100
+        self.alive = True
+
+    def _check_alive(self):
+        if self.health <= 0 or self.energy <= 0:
+            self.alive = False
+            print(f"[{self.name}] очень ослаб и больше не может двигаться...")
+        return self.alive
+
+    def bark(self): 
+        if not self._check_alive():
+            return
+        print(f"[{self.name}] говорит: Гав-гав! 📢")
+        self.energy -= 5
+        self.hunger += 5
+        self.mood += 5
+
+    def eat(self):
+        if not self._check_alive():
+            return
+        print(f"[{self.name}] ест корм и косточку 🦴") 
+        self.hunger = max(0, self.hunger - 30)
+        self.energy = min(100, self.energy + 15)
+        self.mood += 10
+        self.cleanliness -= 5
+
+    def sleep(self):
+        if not self._check_alive():
+            return
+        print(f"[{self.name}] спит... 😴")
+        self.energy = min(100, self.energy + 40)
+        self.hunger += 10
+        self.mood += 5
+
+    def play(self):
+        if not self._check_alive():
+            return
+        print(f"[{self.name}] играет с мячиком 🎾") 
+        self.energy -= 15
+        self.hunger += 10
+        self.mood = min(100, self.mood + 20)
+        self.cleanliness -= 10
+
+    def wash(self):
+        if not self._check_alive():
+            return
+        print(f"[{self.name}] принимает ванну 🛁") 
+        self.cleanliness = 100
+        self.energy -= 10
+        self.mood += 5
+
+    def visit_vet(self):
+        if not self._check_alive():
+            return
+        print(f"[{self.name}] посещает ветеринара 🩺") 
+        self.health = min(100, self.health + 40)
+        self.mood -= 10
+        self.energy -= 10
+
+    def hunt(self):
+        if not self._check_alive():
+            return
+        print(f"[{self.name}] пытается поймать белку 🐿️...") 
+        success = random.choice([True, False])
+        self.energy -= 20
+        self.hunger += 15
+        if success:
+            print(f"[{self.name}] нашёл что-то интересное! 🥳") 
+            self.hunger = max(0, self.hunger - 40)
+            self.mood = min(100, self.mood + 15)
+        else:
+            print(f"[{self.name}] ничего не нашел 💨") 
+            self.mood -= 10
+
+    def wag_tail(self): 
+        if not self._check_alive():
+            return
+        print(f"[{self.name}] виляет хвостом ❤")
+        self.mood = min(100, self.mood + 10)
+        self.energy -= 5
+
+    def get_sick(self):
+        if not self._check_alive():
+            return
+        print(f"[{self.name}] заболел 🤒") 
+        self.health = 30
+        self.mood = 20
+
+    def status(self):
+        print(f"\n--- Состояние собаки {self.name} ---")
+        print(f"Возраст: {self.age} лет") 
+        print(f"Энергия: {self.energy}") 
+        print(f"Голод: {self.hunger}")
+        print(f"Настроение: {self.mood}") 
+        print(f"Здоровье: {self.health}")
+        print(f"Чистота: {self.cleanliness}")
+        print(f"Состояние: {'✅ живой' if self.alive else '💀 неактивный'}")
+        print("--------------------------\n")
+
+
+pirozhok = Dog("Пирожок", 3)
+
+pirozhok.status()
+pirozhok.play()
+pirozhok.eat()
+pirozhok.hunt()
+pirozhok.wash()
+pirozhok.sleep()
+pirozhok.wag_tail() 
+pirozhok.get_sick()
+pirozhok.visit_vet()
+pirozhok.status()
