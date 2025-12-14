@@ -1,0 +1,13 @@
+from colorama import init, Fore, Back, Style
+
+# 1. Инициализация colorama. autoreset=True автоматически сбрасывает стили 
+# после каждого print, что очень удобно.
+init(autoreset=True)
+
+# 2. Демонстрация Fore, Back и Style
+print(Fore.RED + 'Этот текст красный (Fore.RED)')
+print(Back.GREEN + 'У этого текста зеленый фон (Back.GREEN)')
+print(Style.BRIGHT + Fore.BLUE + 'Этот текст яркий и синий (Style.BRIGHT + Fore.BLUE)')
+
+# 3. Стиль сброшен автоматически благодаря autoreset=True в init()
+print('Этот текст обычный.')
