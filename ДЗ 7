@@ -1,0 +1,23 @@
+import math
+
+def safe_calculator(func):
+    def wrapper(expression):
+        try:
+            # дозволені імена
+            allowed = {
+                "abs": abs,
+                "round": round,
+                "pow": pow,
+                "sqrt": math.sqrt
+            }
+            return eval(expression, {"__builtins__": None}, allowed)
+        except ZeroDivisionError:
+            return "Помилка: ділення на нуль"
+        except Exception as e:
+            return f"Помилка обчислення: {e}"
+    return wrapper
+
+
+@safe_calculator
+def calculate(expression):
+    return eval(expression)
