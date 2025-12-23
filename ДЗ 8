@@ -1,0 +1,168 @@
+import random
+import logging
+from functools import wraps
+
+
+logging.basicConfig(
+    filename="dog_simulation.log",
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s",
+    encoding="utf-8"
+)
+
+
+def log_errors(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            logging.error(f"Ошибка в {func.__name__}: {e}")
+            raise
+    return wrapper
+
+
+class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        self.energy = 100
+        self.hunger = 0
+        self.mood = 100
+        self.health = 100
+        self.cleanliness = 100
+        self.alive = True
+        logging.info(f"Создана собака {self.name}, возраст {self.age}")
+
+    def _check_alive(self):
+        if self.health <= 0 or self.energy <= 0:
+            self.alive = False
+            logging.warning(f"{self.name} больше не активен")
+            print(f"[{self.name}] очень ослаб и больше не может двигаться...")
+        return self.alive
+
+    @log_errors
+    def bark(self):
+        if not self._check_alive():
+            return
+        logging.info(f"{self.name} лает")
+        print(f"[{self.name}] говорит: Гав-гав! 📢")
+        self.energy -= 5
+        self.hunger += 5
+        self.mood += 5
+
+    @log_errors
+    def eat(self):
+        if not self._check_alive():
+            return
+        logging.info(f"{self.name} ест")
+        print(f"[{self.name}] ест корм и косточку 🦴")
+        self.hunger = max(0, self.hunger - 30)
+        self.energy = min(100, self.energy + 15)
+        self.mood += 10
+        self.cleanliness -= 5
+
+    @log_errors
+    def sleep(self):
+        if not self._check_alive():
+            return
+        logging.info(f"{self.name} спит")
+        print(f"[{self.name}] спит... 😴")
+        self.energy = min(100, self.energy + 40)
+        self.hunger += 10
+        self.mood += 5
+
+    @log_errors
+    def play(self):
+        if not self._check_alive():
+            return
+        logging.info(f"{self.name} играет")
+        print(f"[{self.name}] играет с мячиком 🎾")
+        self.energy -= 15
+        self.hunger += 10
+        self.mood = min(100, self.mood + 20)
+        self.cleanliness -= 10
+
+    @log_errors
+    def wash(self):
+        if not self._check_alive():
+            return
+        logging.info(f"{self.name} моется")
+        print(f"[{self.name}] принимает ванну 🛁")
+        self.cleanliness = 100
+        self.energy -= 10
+        self.mood += 5
+
+    @log_errors
+    def visit_vet(self):
+        if not self._check_alive():
+            return
+        logging.info(f"{self.name} посещает ветеринара")
+        print(f"[{self.name}] посещает ветеринара 🩺")
+        self.health = min(100, self.health + 40)
+        self.mood -= 10
+        self.energy -= 10
+
+    @log_errors
+    def hunt(self):
+        if not self._check_alive():
+            return
+        logging.info(f"{self.name} охотится")
+        print(f"[{self.name}] пытается поймать белку 🐿️...")
+        success = random.choice([True, False])
+        self.energy -= 20
+        self.hunger += 15
+        if success:
+            logging.info(f"{self.name} успешно поохотился")
+            print(f"[{self.name}] нашёл что-то интересное! 🥳")
+            self.hunger = max(0, self.hunger - 40)
+            self.mood = min(100, self.mood + 15)
+        else:
+            logging.info(f"{self.name} неудачная охота")
+            print(f"[{self.name}] ничего не нашел 💨")
+            self.mood -= 10
+
+    @log_errors
+    def wag_tail(self):
+        if not self._check_alive():
+            return
+        logging.info(f"{self.name} виляет хвостом")
+        print(f"[{self.name}] виляет хвостом ❤")
+        self.mood = min(100, self.mood + 10)
+        self.energy -= 5
+
+    @log_errors
+    def get_sick(self):
+        if not self._check_alive():
+            return
+        logging.warning(f"{self.name} заболел")
+        print(f"[{self.name}] заболел 🤒")
+        self.health = 30
+        self.mood = 20
+
+    def status(self):
+        logging.info(f"Проверка состояния {self.name}")
+        print(f"\n--- Состояние собаки {self.name} ---")
+        print(f"Возраст: {self.age}")
+        print(f"Энергия: {self.energy}")
+        print(f"Голод: {self.hunger}")
+        print(f"Настроение: {self.mood}")
+        print(f"Здоровье: {self.health}")
+        print(f"Чистота: {self.cleanliness}")
+        print(f"Состояние: {'✅ живой' if self.alive else '💀 неактивный'}")
+        print("--------------------------\n")
+
+
+
+pirozhok = Dog("Пирожок", 3)
+
+pirozhok.status()
+pirozhok.play()
+pirozhok.eat()
+pirozhok.hunt()
+pirozhok.wash()
+pirozhok.sleep()
+pirozhok.wag_tail()
+pirozhok.get_sick()
+pirozhok.visit_vet()
+pirozhok.status()
