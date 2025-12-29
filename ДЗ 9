@@ -1,0 +1,22 @@
+import requests
+
+class CurrencyConverter:
+    def __init__(self):
+        self.usd_rate = self._get_usd_rate()
+
+    def _get_usd_rate(self):
+        url = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json"
+        data = requests.get(url).json()
+        for currency in data:
+            if currency["cc"] == "USD":
+                return currency["rate"]
+
+    def uah_to_usd(self, amount_uah):
+        return round(amount_uah / self.usd_rate, 2)
+
+
+if __name__ == "__main__":
+    converter = CurrencyConverter()
+    uah = float(input("Введіть суму в гривнях: "))
+    usd = converter.uah_to_usd(uah)
+    print(f"{uah} грн = {usd} USD")
