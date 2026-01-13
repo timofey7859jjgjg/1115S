@@ -1,0 +1,29 @@
+import sqlite3
+import datetime
+
+
+connection = sqlite3.connect("weather_DB.sl3")
+cur = connection.cursor()
+
+
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS weather (
+        date_time TEXT, 
+        temperature TEXT
+    );
+""")
+
+
+current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+current_temp = "-10°C" 
+
+cur.execute("INSERT INTO weather (date_time, temperature) VALUES (?, ?);", 
+            (current_time, current_temp))
+
+
+connection.commit()
+
+cur.execute("SELECT * FROM weather;")
+print("Данные в базе:", cur.fetchall())
+
+connection.close()
